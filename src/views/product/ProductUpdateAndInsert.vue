@@ -73,11 +73,14 @@ import { handleError, reactive, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { PRODUCT_CATEGORIES } from '@/constants/appConstants';
 import { useSwal } from '@/utility/useSwal';
+import productService from '@/services/productService';
+// import router from '@/router/routes';
+import { APP_ROUTE_NAMES } from '@/constants/routeNames';
 
 
 
 const { showSuccess, showError, showConfirm } = useSwal();
-const route = useRoute();
+const router = useRouter();
 const loading = ref(false);
 const errorList = reactive([]);
 const productObj = reactive({
@@ -124,7 +127,10 @@ async function handleSubmit() {
         bestseller: Boolean(productObj.isBestSeller),
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      await productService.createProduct(productData);
+      showSuccess('Product created suceessfully');
+      router.push({ name: APP_ROUTE_NAMES.PRODUCT_LIST });
       console.log(productData);
 
     }
