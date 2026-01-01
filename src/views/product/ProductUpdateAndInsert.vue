@@ -5,10 +5,10 @@
         <form v-on:submit.prevent="handleSubmit">
           <div class="h2 text-center text-success">Create Product</div>
           <hr />
-          <div class="alert alert-danger pb-0">
+          <div v-if="errorList.length > 0" class="alert alert-danger pb-0">
             Please fix the following errors:
             <ul>
-              <li>Error List</li>
+              <li v-for="error in errorList" :key="errro">{{ error }}</li>
             </ul>
           </div>
 
@@ -74,6 +74,7 @@ import { useRouter, useRoute } from 'vue-router';
 
 const route = useRoute();
 const loading = ref(false);
+const errorList = reactive([]);
 const productObj = reactive({
   name: '',
   description: '',
@@ -89,17 +90,33 @@ async function handleSubmit() {
 
   try {
     loading.value = true;
+    errorList.length = 0;
 
-    const productData = {
-      ...productObj,
-      price: Number(productObj.price),
-      salePrice: productObj.salePrice ? Number(productObj.salePrice) : null,
-      tags: productObj.tags.split(',').map((tag) => tag.trim()),
-      bestseller: Boolean(productObj.isBestSeller),
+    // validatios
+
+    if (productObj.name.length < 3) {
+      errorList.push('El nombre debe tener al menos 3 caracteres')
     }
+    if (productObj.price <= 0) {
+      errorList.push('El precio debe ser mayor a cero')
+    }
+    if (productObj.category === '') {
+      errorList.push( 'Por favor seleccione una categoría');
+    }
+    if (!errorList.length) {
 
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log(productData);
+      const productData = {
+        ...productObj,
+        price: Number(productObj.price),
+        salePrice: productObj.salePrice ? Number(productObj.salePrice) : null,
+        tags: productObj.tags.split(',').map((tag) => tag.trim()),
+        bestseller: Boolean(productObj.isBestSeller),
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(productData);
+
+    }
   } catch (error) {
 
   } finally {
