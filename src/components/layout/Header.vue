@@ -17,6 +17,10 @@
                         <router-link class="nav-link active" aria-current="page"
                             :to="{ name: APP_ROUTE_NAMES.PRODUCT_LIST }">Product</router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link active" aria-current="page"
+                            :to="{ name: APP_ROUTE_NAMES.PRODUCT_CREATE}">Add Product</router-link>
+                    </li>
                 </ul>
                 <ul class="d-flex navbar-nav">
                     <li class="nav-item dropdown">
@@ -25,9 +29,11 @@
                             <i class="bi bi-laptop"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-brightness-high"></i> &nbsp; Ligth</a>
+                            <li><button class="dropdown-item" @click="themeStore.setTheme('light')"><i
+                                        class="bi bi-brightness-high"></i> &nbsp; Light</button>
                             </li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-moon-stars-fill"></i> &nbsp; Dark</a>
+                            <li><button class="dropdown-item" @click="themeStore.setTheme('dark')"><i
+                                        class="bi bi-moon-stars-fill"></i> &nbsp; Dark</button>
                             </li>
                         </ul>
                     </li>
@@ -48,7 +54,9 @@
 <script setup>
 import { APP_ROUTE_NAMES } from '@/constants/routeNames';
 import { useRouter } from 'vue-router';
+import { useThemeStore } from '@/stores/themeStore';
 
+const themeStore = useThemeStore()
 const router = useRouter();
 
 </script>
