@@ -8,7 +8,7 @@
           <div v-if="errorList.length > 0" class="alert alert-danger pb-0">
             Please fix the following errors:
             <ul>
-              <li v-for="error in errorList" :key="errro">{{ error }}</li>
+              <li v-for="error in errorList" :key="error">{{ error }}</li>
             </ul>
           </div>
 
@@ -69,10 +69,14 @@
 </template>
 
 <script setup>
-import { handleError, reactive, ref } from 'vue';
+import { handleError, reactive, ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { PRODUCT_CATEGORIES } from '@/constants/appConstants';
+import { useSwal } from '@/utility/useSwal';
 
+
+
+const { showSuccess, showError, showConfirm } = useSwal();
 const route = useRoute();
 const loading = ref(false);
 const errorList = reactive([]);
@@ -85,6 +89,12 @@ const productObj = reactive({
   isBestSeller: false,
   category: '',
   image: 'http://placehold.co/600x400'
+});
+
+onMounted(() => {
+  showSuccess('Product created suceessfully');
+  // showErrror('Product creation failed');
+  // showConfirm('Are you sure?');
 });
 
 async function handleSubmit() {
@@ -110,7 +120,7 @@ async function handleSubmit() {
         ...productObj,
         price: Number(productObj.price),
         salePrice: productObj.salePrice ? Number(productObj.salePrice) : null,
-        tags: productObj.tags.split(',').map((tag) => tag.trim()),
+        tags: productObj.tags.length > 0 ? productObj.tags.split(',').map((tag) => tag.trim()) : [],
         bestseller: Boolean(productObj.isBestSeller),
       }
 
